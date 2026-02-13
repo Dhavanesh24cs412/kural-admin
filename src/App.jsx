@@ -8,6 +8,7 @@ import Schemes from "./pages/Schemes";
 import Eligibility from "./pages/Eligibility";
 import Segments from "./pages/Segments";
 import Intelligence from "./pages/Intelligence";
+import CampaignPreview from "./pages/CampaignPreview";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/eligibility" element={<Eligibility />} />
         <Route path="/segments" element={<Segments />} />
         <Route path="/intelligence" element={<Intelligence />} />
+        <Route path="/campaigns/:campaignId" element={<CampaignPreview />} />
       </Routes>
     </AdminLayout>
   );

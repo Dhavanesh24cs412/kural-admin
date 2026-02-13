@@ -15,10 +15,11 @@ export default function DataTable({ columns, rows }) {
             ))}
           </tr>
         </thead>
+
         <tbody>
-          {rows.map((row, idx) => (
+          {rows.map((row, rowIndex) => (
             <tr
-              key={idx}
+              key={rowIndex}
               className="border-b border-slate-100 last:border-0"
             >
               {columns.map((col) => (
@@ -26,7 +27,9 @@ export default function DataTable({ columns, rows }) {
                   key={col.key}
                   className="px-4 py-2 text-slate-700"
                 >
-                  {row[col.key]}
+                  {col.render
+                    ? col.render(row)
+                    : row[col.key]}
                 </td>
               ))}
             </tr>

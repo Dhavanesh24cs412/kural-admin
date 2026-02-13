@@ -4,6 +4,8 @@ import { supabase } from "../lib/supabaseClient";
 
 import PageHeader from "../components/common/PageHeader";
 import DataTable from "../components/common/DataTable";
+import { Link } from "react-router-dom";
+
 
 export default function Segments() {
   const [rows, setRows] = useState([]);
@@ -197,7 +199,18 @@ function startCall(campaignId) {
       {!loading && !error && (
         <DataTable
           columns={[
-            { key: "campaign_name", label: "Campaign" },
+            {
+              key: "campaign_name",
+              label: "Campaign",
+              render: (row) => (
+              <Link
+                to={`/campaigns/${row.campaign_id}`}
+                className="text-blue-600 underline text-sm"
+              >
+                {row.campaign_name}
+              </Link>
+              ),
+            },
             { key: "campaign_type", label: "Type" },
             { key: "state", label: "State" },
             { key: "district", label: "District" },
