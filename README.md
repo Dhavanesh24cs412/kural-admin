@@ -51,7 +51,7 @@ npm run dev
 2. Click **Fork** (top-right corner)
 3. Your fork will be created at:  
    ```
-   https://github.com/YOUR_USERNAME/kural-admin
+   https://github.com/Dhavanesh24cs412/kural-admin.git
    ```
 
 ---
@@ -59,7 +59,7 @@ npm run dev
 ### Step 2: Clone Your Fork Locally
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/kural-admin.git
+git clone https://github.com/Dhavanesh24cs412/kural-admin.git
 cd kural-admin
 ```
 
@@ -97,7 +97,7 @@ git checkout -b your-name-branch
 - `docs/` – documentation
 - `chore/` – maintenance tasks
 
-> **Tip:** Use your name as part of the branch name to avoid branch clutter. Example: `yourname-feature`
+> **Tip:** Use your name as part of the branch name to avoid branch clutter. Example: `yourname-branch`
 
 ---
 
@@ -120,7 +120,7 @@ git commit -m "feat: add responsive navbar"
 ### Step 6: Push Changes and Create a Pull Request
 
 ```bash
-git push origin your-name-branch
+git push origin yourname-branch
 ```
 
 Then open a **Pull Request** on GitHub with a clear description of your changes.
@@ -137,16 +137,53 @@ Then open a **Pull Request** on GitHub with a clear description of your changes.
 git checkout main
 git pull origin main
 ```
-
-2. Review the changes carefully
-3. Approve or request changes
-4. Merge when ready:
+2. Admin Testing Workflow
 
 ```bash
-git merge PR-BRANCH-NAME
-git push origin main
+# Get the latest data from the repository
+git fetch origin
 ```
+3. Check out the contributor's branch:
 
+```bash
+# Switch to their branch
+git checkout <branch-name>
+
+# Ensure it's up to date
+git pull origin <branch-name>
+```
+4. Clean Install & Run:
+
+```bash
+# Install any new packages they might have added
+npm install
+
+# Run the development server
+npm run dev
+```
+5. Verification Checklist:
+   
+   [ ] Does the app start without console errors?
+   [ ] Does the specific feature/fix work as described in the PR?
+   [ ] Does it work on different screen sizes (Responsive Check)?
+   [ ] Did it break any existing features?
+
+6. Merge via GitHub (Recommended):
+
+   Once testing passes, return to the GitHub PR web interface and select "Squash and merge" to keep the main history clean.
+   
+7. Cleanup your local environment:
+
+```bash
+# Switch back to main
+git checkout main
+
+# Update your local main with the new merge
+git pull origin main
+
+# Delete the local copy of their feature branch
+git branch -d <branch-name>
+```
 ---
 
 ## 📝 Pull Request Template
