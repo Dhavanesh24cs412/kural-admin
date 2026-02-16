@@ -30,8 +30,8 @@ Follow these steps exactly to ensure smooth team collaboration and avoid conflic
 ### Step 2: Clone Your Fork Locally
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/react-app.git
-cd react-app
+git clone https://github.com/Dhavanesh24cs412/kural-admin.git
+cd kural-admin
 ```
 
 ---
@@ -39,7 +39,7 @@ cd react-app
 ### Step 3: Add Upstream Remote (Main Repository)
 
 ```bash
-git remote add upstream https://github.com/OWNER/react-app.git
+git remote add upstream https://github.com/Dhavanesh24cs412/kural-admin.git
 git fetch upstream
 ```
 
@@ -58,7 +58,7 @@ git remote -v
 ```bash
 git checkout main
 git pull upstream main
-git checkout -b feature/your-feature-name
+git checkout -b <branch-name>
 ```
 
 **Branch naming conventions:**
@@ -66,7 +66,8 @@ git checkout -b feature/your-feature-name
 - `fix/` – bug fixes
 - `docs/` – documentation
 - `chore/` – maintenance tasks
-
+  
+  It is advised for this project to use your name as the branch name to avoid being flooded with old branches- eg: yourname-branch
 ---
 
 ### Step 5: Make Your Changes
