@@ -5,9 +5,9 @@ import Topbar from "./Topbar";
 export default function AdminLayout({ children }) {
   return (
     <div className="flex h-screen w-screen bg-slate-100 text-slate-900">
-      
+
       {/* Sidebar */}
-      <aside className="w-64 flex-shrink-0">
+      <aside className="w-[260px] flex-shrink-0">
         <Sidebar />
       </aside>
 

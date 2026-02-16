@@ -73,37 +73,39 @@ export default function Intelligence() {
       />
 
       {loading ? (
-        <div className="text-sm text-slate-500">
-          Computing intelligence…
+        <div className="text-sm text-slate-500 font-medium text-center py-8">
+          Computing intelligence...
         </div>
       ) : (
         <>
-          <h2 className="text-sm font-semibold text-slate-700 mb-3">
+          <h2 className="text-lg font-bold text-primary font-sans mb-4 tracking-tight">
             Eligibility Gaps
           </h2>
 
-          <DataTable
-            columns={[
-              { key: "scheme_id", label: "Scheme ID" },
-              { key: "affected_citizens", label: "Affected Citizens" },
-            ]}
-            rows={gapRows}
-          />
+          <div className="border border-slate-200 rounded-md overflow-hidden bg-white shadow-sm mb-8">
+            <DataTable
+              columns={[
+                { key: "scheme_id", label: "Scheme ID" },
+                { key: "affected_citizens", label: "Affected Citizens" },
+              ]}
+              rows={gapRows}
+            />
+          </div>
 
-          <div className="h-8" />
-
-          <h2 className="text-sm font-semibold text-slate-700 mb-3">
+          <h2 className="text-lg font-bold text-primary font-sans mb-4 tracking-tight">
             Outbound Communication Batches
           </h2>
 
-          <DataTable
-            columns={[
-              { key: "scheme_id", label: "Scheme ID" },
-              { key: "target_citizens", label: "Target Citizens" },
-              { key: "batch_status", label: "Batch Status" },
-            ]}
-            rows={batchRows}
-          />
+          <div className="border border-slate-200 rounded-md overflow-hidden bg-white shadow-sm">
+            <DataTable
+              columns={[
+                { key: "scheme_id", label: "Scheme ID" },
+                { key: "target_citizens", label: "Target Citizens" },
+                { key: "batch_status", label: "Batch Status" },
+              ]}
+              rows={batchRows}
+            />
+          </div>
         </>
       )}
     </div>

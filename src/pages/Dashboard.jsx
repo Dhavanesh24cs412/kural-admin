@@ -18,51 +18,50 @@ export default function Dashboard() {
   const [recentEligibility, setRecentEligibility] = useState([]);
 
   useEffect(() => {
+    async function loadDashboard() {
+      const [
+        citizensRes,
+        schemesRes,
+        eligibilityRes,
+      ] = await Promise.all([
+        supabase
+          .from("citizens")
+          .select("*", { count: "exact", head: true }),
+
+        supabase
+          .from("government_schemes")
+          .select("*", { count: "exact", head: true }),
+
+        supabase
+          .from("eligibility_mapping")
+          .select("*", { count: "exact", head: true }),
+      ]);
+
+      setStats({
+        citizens: citizensRes.count ?? 0,
+        schemes: schemesRes.count ?? 0,
+        eligibility: eligibilityRes.count ?? 0,
+        gaps: "—",
+        segments: "—",
+      });
+
+      const { data } = await supabase
+        .from("eligibility_mapping")
+        .select("citizen_id, scheme_id, is_eligible, evaluated_at")
+        .order("evaluated_at", { ascending: false })
+        .limit(5);
+
+      setRecentEligibility(
+        (data || []).map((r) => ({
+          citizen_id: r.citizen_id,
+          scheme_id: r.scheme_id,
+          is_eligible: r.is_eligible ? "Eligible" : "Not Eligible",
+          evaluated_at: new Date(r.evaluated_at).toLocaleDateString(),
+        }))
+      );
+    }
     loadDashboard();
   }, []);
-
-  async function loadDashboard() {
-    const [
-      citizensRes,
-      schemesRes,
-      eligibilityRes,
-    ] = await Promise.all([
-      supabase
-        .from("citizens")
-        .select("*", { count: "exact", head: true }),
-
-      supabase
-        .from("government_schemes")
-        .select("*", { count: "exact", head: true }),
-
-      supabase
-        .from("eligibility_mapping")
-        .select("*", { count: "exact", head: true }),
-    ]);
-
-    setStats({
-      citizens: citizensRes.count ?? 0,
-      schemes: schemesRes.count ?? 0,
-      eligibility: eligibilityRes.count ?? 0,
-      gaps: "—",
-      segments: "—",
-    });
-
-    const { data } = await supabase
-      .from("eligibility_mapping")
-      .select("citizen_id, scheme_id, is_eligible, evaluated_at")
-      .order("evaluated_at", { ascending: false })
-      .limit(5);
-
-    setRecentEligibility(
-      (data || []).map((r) => ({
-        citizen_id: r.citizen_id,
-        scheme_id: r.scheme_id,
-        is_eligible: r.is_eligible ? "Eligible" : "Not Eligible",
-        evaluated_at: new Date(r.evaluated_at).toLocaleDateString(),
-      }))
-    );
-  }
 
   return (
     <div>
@@ -79,7 +78,7 @@ export default function Dashboard() {
         <StatCard label="Citizen Segments" value={stats.segments} />
       </div>
 
-      <h2 className="text-sm font-semibold text-slate-700 mb-3">
+      <h2 className="text-lg font-bold text-primary font-sans mb-4 tracking-tight">
         Recent Eligibility Evaluations
       </h2>
 

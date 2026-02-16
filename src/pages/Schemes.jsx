@@ -1,5 +1,5 @@
 // src/pages/Schemes.jsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "../lib/supabaseClient";
 
 import PageHeader from "../components/common/PageHeader";
@@ -24,18 +24,13 @@ export default function Schemes() {
   const [totalPages, setTotalPages] = useState(1);
 
 
-useEffect(() => {
-  loadSchemes();
-}, [page]);
-
-
-  async function loadSchemes(filterColumn, filterValue) {
+  const loadSchemes = useCallback(async (filterColumn, filterValue) => {
     setLoading(true);
 
-let query = supabase
-  .from("government_schemes")
-  .select("*", { count: "exact" })
-  .order("scheme_id", { ascending: true });
+    let query = supabase
+      .from("government_schemes")
+      .select("*", { count: "exact" })
+      .order("scheme_id", { ascending: true });
 
 
     if (filterColumn && filterValue) {
@@ -55,14 +50,18 @@ let query = supabase
     setRows(data || []);
     setTotalPages(Math.ceil((count || 0) / PAGE_SIZE));
     setLoading(false);
+  }, [page]);
 
+  useEffect(() => {
+    loadSchemes();
+  }, [loadSchemes]);
+
+
+  function handleSearch() {
+    if (!searchColumn || !searchValue.trim()) return;
+    setPage(1);
+    loadSchemes(searchColumn, searchValue.trim());
   }
-
-function handleSearch() {
-  if (!searchColumn || !searchValue.trim()) return;
-  setPage(1);
-  loadSchemes(searchColumn, searchValue.trim());
-}
 
 
   function resetSearch() {
@@ -80,89 +79,95 @@ function handleSearch() {
       />
 
       {/* SEARCH BAR */}
-      <div className="flex items-center gap-3 mb-4">
-        <select
-          value={searchColumn}
-          onChange={(e) => setSearchColumn(e.target.value)}
-          className="border border-slate-300 rounded-md px-2 py-1 text-sm bg-white"
-        >
-          <option value="">Select column</option>
-          {SEARCH_COLUMNS.map((c) => (
-            <option key={c.value} value={c.value}>
-              {c.label}
-            </option>
-          ))}
-        </select>
+      <div className="flex items-center gap-3 mb-6 bg-white p-4 rounded-md border border-slate-200 shadow-sm">
+        <div className="flex-1 max-w-xs">
+          <select
+            value={searchColumn}
+            onChange={(e) => setSearchColumn(e.target.value)}
+            className="w-full h-10 rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all font-body bg-slate-50"
+          >
+            <option value="">Select Filter Column</option>
+            {SEARCH_COLUMNS.map((c) => (
+              <option key={c.value} value={c.value}>
+                {c.label}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <input
-          type="text"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          disabled={!searchColumn}
-          placeholder={
-            searchColumn ? "Enter search value" : "Select column first"
-          }
-          className="border border-slate-300 rounded-md px-3 py-1 text-sm disabled:bg-slate-100"
-        />
+        <div className="flex-1 max-w-sm">
+          <input
+            type="text"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            disabled={!searchColumn}
+            placeholder={
+              searchColumn ? `Search by ${SEARCH_COLUMNS.find(c => c.value === searchColumn)?.label}...` : "Select a column first"
+            }
+            className="w-full h-10 rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all font-body disabled:bg-slate-100 disabled:text-slate-400"
+          />
+        </div>
 
         <button
           onClick={handleSearch}
           disabled={!searchColumn || !searchValue}
-          className="px-3 py-1 text-sm border border-slate-300 rounded-md hover:bg-slate-100 disabled:opacity-50"
+          className="h-10 px-6 bg-accent text-white font-bold rounded-md hover:bg-accent/90 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed font-sans tracking-wide text-sm uppercase"
         >
           Search
         </button>
 
         <button
           onClick={resetSearch}
-          className="px-3 py-1 text-sm text-slate-600 underline"
+          className="h-10 px-4 text-slate-500 font-bold hover:text-primary transition-colors text-sm uppercase tracking-wide"
         >
           Reset
         </button>
       </div>
 
       {/* TABLE */}
-      <div className="border border-slate-200 rounded-md overflow-hidden bg-white">
-        <table className="min-w-full text-sm">
+      <div className="border border-slate-200 rounded-md overflow-hidden bg-white shadow-sm">
+        <table className="w-full text-sm">
           <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
-              <th className="px-4 py-2 text-left">Scheme ID</th>
-              <th className="px-4 py-2 text-left">Code</th>
-              <th className="px-4 py-2 text-left">Scheme Name</th>
-              <th className="px-4 py-2 text-left">Department</th>
-              <th className="px-4 py-2 text-left">Scope</th>
-              <th className="px-4 py-2 text-left">Income Limit</th>
-              <th className="px-4 py-2 text-left">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider font-sans">Scheme ID</th>
+              <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider font-sans">Code</th>
+              <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider font-sans">Scheme Name</th>
+              <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider font-sans">Department</th>
+              <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider font-sans">Scope</th>
+              <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider font-sans">Income Limit</th>
+              <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider font-sans">Actions</th>
             </tr>
           </thead>
 
-          <tbody>
+          <tbody className="divide-y divide-slate-100">
             {loading ? (
               <tr>
-                <td colSpan={7} className="px-4 py-3 text-slate-500">
-                  Loading schemes…
+                <td colSpan={7} className="px-6 py-8 text-center text-slate-500 font-medium">
+                  Loading schemes data...
                 </td>
               </tr>
             ) : (
               rows.map((row) => (
                 <tr
                   key={row.scheme_id}
-                  className="border-b border-slate-100 last:border-0 bg-[#EDF0F3]"
+                  className="hover:bg-slate-50 transition-colors duration-150 group"
                 >
-                  <td className="px-4 py-2">{row.scheme_id}</td>
-                  <td className="px-4 py-2">{row.scheme_code}</td>
-                  <td className="px-4 py-2">{row.scheme_name}</td>
-                  <td className="px-4 py-2">{row.department}</td>
-                  <td className="px-4 py-2">
-                    {Array.isArray(row.regional_scope)
-                      ? row.regional_scope.join(", ")
-                      : row.regional_scope ?? "—"}
+                  <td className="px-6 py-4 font-mono text-slate-600">{row.scheme_id}</td>
+                  <td className="px-6 py-4 font-mono font-medium text-primary">{row.scheme_code}</td>
+                  <td className="px-6 py-4 font-medium text-slate-900">{row.scheme_name}</td>
+                  <td className="px-6 py-4 text-slate-600">{row.department}</td>
+                  <td className="px-6 py-4">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                      {Array.isArray(row.regional_scope)
+                        ? row.regional_scope.join(", ")
+                        : row.regional_scope ?? "—"}
+                    </span>
                   </td>
-                  <td className="px-4 py-2">{row.income_limit}</td>
-                  <td className="px-4 py-2">
+                  <td className="px-6 py-4 font-mono text-slate-600">{row.income_limit}</td>
+                  <td className="px-6 py-4">
                     <button
                       onClick={() => setSelectedScheme(row)}
-                      className="text-slate-700 underline hover:text-slate-900"
+                      className="text-accent font-bold text-xs uppercase tracking-wide hover:underline"
                     >
                       View Details
                     </button>
@@ -174,59 +179,60 @@ function handleSearch() {
         </table>
       </div>
       {/* PAGINATION */}
-    <div className="flex items-center justify-end gap-3 mt-4 text-sm">
-      <button
-        onClick={() => setPage((p) => Math.max(p - 1, 1))}
-        disabled={page === 1}
-        className="px-3 py-1 border border-slate-300 rounded-md disabled:opacity-50"
-      >
-        Previous
-      </button>
+      <div className="flex items-center justify-end gap-3 mt-6 text-sm">
+        <button
+          onClick={() => setPage((p) => Math.max(p - 1, 1))}
+          disabled={page === 1}
+          className="h-9 px-4 border border-slate-300 rounded-md font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          Previous
+        </button>
 
-      <span className="text-slate-600">
-        Page {page} of {totalPages}
-      </span>
+        <span className="text-slate-600 font-medium font-mono">
+          Page {page} of {totalPages}
+        </span>
 
-      <button
-        onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-        disabled={page === totalPages}
-        className="px-3 py-1 border border-slate-300 rounded-md disabled:opacity-50"
-      >
-        Next
-      </button>
-    </div>
+        <button
+          onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+          disabled={page === totalPages}
+          className="h-9 px-4 border border-slate-300 rounded-md font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          Next
+        </button>
+      </div>
 
 
       {/* RIGHT SLIDE-IN PANEL */}
       <div
         className={[
-          "fixed top-0 right-0 h-full w-[420px] bg-white border-l border-slate-200 z-40",
-          "transform transition-transform duration-300 ease-in-out",
+          "fixed top-0 right-0 h-full w-[450px] bg-white border-l border-slate-200 z-50 shadow-2xl",
+          "transform transition-transform duration-300 ease-in-out font-sans",
           selectedScheme ? "translate-x-0" : "translate-x-full",
         ].join(" ")}
       >
         {selectedScheme && (
           <div className="h-full flex flex-col">
-            <div className="p-5 border-b border-slate-200 bg-stone-200">
-              <div className="text-xs uppercase tracking-wide text-slate-500">
+            <div className="p-6 border-b border-slate-100 bg-slate-50/50">
+              <div className="text-[10px] uppercase tracking-widest font-bold text-slate-500 mb-2">
                 {selectedScheme.scheme_code}
               </div>
-              <div className="text-lg font-semibold text-slate-900 mt-1">
+              <div className="text-xl font-bold text-primary leading-tight">
                 {selectedScheme.scheme_name}
               </div>
-              <div className="text-sm font-semibold text-slate-500 mt-2">
-                {selectedScheme.scheme_description || "—"}
+              <div className="text-sm text-slate-500 mt-3 font-body leading-relaxed">
+                {selectedScheme.scheme_description || "No description provided."}
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-5 space-y-4 text-sm">
-              <Detail label="Department" value={selectedScheme.department} />
-              <Detail label="Regional Scope" value={selectedScheme.regional_scope} />
-              <Detail label="Income Limit" value={selectedScheme.income_limit} />
-              <Detail label="Minimum Age" value={selectedScheme.min_age} />
-              <Detail label="Maximum Age" value={selectedScheme.max_age} />
-              <Detail label="Gender" value={selectedScheme.gender} />
-              <Detail label="Eligible Caste" value={selectedScheme.eligible_caste} />
+            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+              <div className="grid grid-cols-2 gap-6">
+                <Detail label="Department" value={selectedScheme.department} />
+                <Detail label="Regional Scope" value={selectedScheme.regional_scope} />
+                <Detail label="Income Limit" value={selectedScheme.income_limit} />
+                <Detail label="Age Range" value={`${selectedScheme.min_age ?? 0} - ${selectedScheme.max_age ?? 'N/A'}`} />
+                <Detail label="Gender" value={selectedScheme.gender} />
+                <Detail label="Eligible Caste" value={selectedScheme.eligible_caste} />
+              </div>
               <Detail
                 label="Eligible Occupation"
                 value={selectedScheme.eligible_occupation}
@@ -243,12 +249,12 @@ function handleSearch() {
               />
             </div>
 
-            <div className="p-4 border-t border-slate-200">
+            <div className="p-6 border-t border-slate-100 bg-slate-50">
               <button
                 onClick={() => setSelectedScheme(null)}
-                className="w-full py-2 text-sm border border-slate-300 rounded-md hover:bg-slate-100"
+                className="w-full h-10 border border-slate-300 rounded-md font-bold text-slate-600 hover:bg-white hover:border-slate-400 transition-all uppercase tracking-wide text-xs"
               >
-                Close
+                Close Panel
               </button>
             </div>
           </div>
@@ -265,10 +271,10 @@ function Detail({ label, value }) {
 
   return (
     <div>
-      <div className="text-xs uppercase tracking-wide text-slate-500">
+      <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-sans mb-1">
         {label}
       </div>
-      <div className="mt-1 text-slate-800">
+      <div className="text-sm text-slate-800 font-medium font-body leading-relaxed">
         {displayValue}
       </div>
     </div>

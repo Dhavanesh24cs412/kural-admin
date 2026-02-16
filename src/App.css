@@ -1,1 +1,41 @@
 @import "tailwindcss";
+
+@theme {
+    /* Colors */
+    --color-primary: #0A192F;
+    --color-accent: #1A73E8;
+    --color-bg-canvas: #F4F7F9;
+    --color-bg-card: #FFFFFF;
+    --color-status-success: #28A745;
+    --color-status-error: #DC3545;
+
+    /* Fonts */
+    --font-sans: "Public Sans", sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
+    --font-body: "Inter", sans-serif;
+
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+}
+
+@layer base {
+    body {
+        font-family: var(--font-body);
+        background-color: var(--color-bg-canvas);
+        color: var(--color-primary);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-sans);
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        /* 1px equivalent approx */
+    }
+}
