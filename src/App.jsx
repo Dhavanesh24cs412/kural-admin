@@ -9,20 +9,76 @@ import Eligibility from "./pages/Eligibility";
 import Segments from "./pages/Segments";
 import Intelligence from "./pages/Intelligence";
 import CampaignPreview from "./pages/CampaignPreview";
+import Login from "./pages/Login";
 
 export default function App() {
   return (
-    <AdminLayout>
-      <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/citizens" element={<Citizens />} />
-        <Route path="/schemes" element={<Schemes />} />
-        <Route path="/eligibility" element={<Eligibility />} />
-        <Route path="/segments" element={<Segments />} />
-        <Route path="/intelligence" element={<Intelligence />} />
-        <Route path="/campaigns/:campaignId" element={<CampaignPreview />} />
-      </Routes>
-    </AdminLayout>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route
+        path="/"
+        element={
+          <AdminLayout>
+            <Navigate to="/dashboard" replace />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/dashboard"
+        element={
+          <AdminLayout>
+            <Dashboard />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/citizens"
+        element={
+          <AdminLayout>
+            <Citizens />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/schemes"
+        element={
+          <AdminLayout>
+            <Schemes />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/eligibility"
+        element={
+          <AdminLayout>
+            <Eligibility />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/segments"
+        element={
+          <AdminLayout>
+            <Segments />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/intelligence"
+        element={
+          <AdminLayout>
+            <Intelligence />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/campaigns/:campaignId"
+        element={
+          <AdminLayout>
+            <CampaignPreview />
+          </AdminLayout>
+        }
+      />
+    </Routes>
   );
 }
