@@ -59,7 +59,7 @@ npm run dev
 ### Step 2: Clone Your Fork Locally
 
 ```bash
-git clone https://github.com/Dhavanesh24cs412/kural-admin.git
+git clone https://github.com/contributor-name/kural-admin.git
 cd kural-admin
 ```
 
