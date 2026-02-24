@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
+import { geoCentroid } from "d3-geo";
+import tnGeoJsonUrl from "../assets/tamilnadu_districts.geojson?url";
 import { supabase } from '../lib/supabaseClient';
 import PageHeader from '../components/common/PageHeader';
-// Using a simpler approach since react-simple-maps + GeoJSON is complex to source reliably
-// We will build a clean grid/list visualization that meets "Geographic Monitoring" requirements
-// while maintaining the high-craft "Administrative Intelligence" aesthetic.
 
 const VIEW_MODES = [
     { id: 'citizens', label: 'Citizens' },
@@ -40,6 +40,17 @@ export default function GeoMonitoring() {
             schemes: Math.max(...data.map(d => d.total_unique_schemes || 0)),
             ratio: Math.max(...data.map(d => d.citizen_scheme_ratio || 0))
         };
+    }, [data]);
+
+    // Fast lookup map for district matching
+    const districtMap = useMemo(() => {
+        const map = {};
+        data.forEach(d => {
+            if (d.district) {
+                map[d.district.trim().toLowerCase()] = d;
+            }
+        });
+        return map;
     }, [data]);
 
     const getColorIntensity = (item) => {
@@ -111,51 +122,144 @@ export default function GeoMonitoring() {
             </div>
 
             {loading ? (
-                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 animate-pulse">
-                    {[...Array(12)].map((_, i) => (
-                        <div key={i} className="h-24 bg-slate-200 rounded-xl"></div>
-                    ))}
+                <div className="flex items-center justify-center p-12 text-slate-400 font-mono text-sm uppercase tracking-widest animate-pulse">
+                    Loading Intelligence Data...
                 </div>
             ) : (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                    {data.map(district => {
-                        const intensity = getColorIntensity(district);
+                <div className="flex flex-col gap-8">
+                    <div className="w-full border border-slate-200 rounded-xl bg-white shadow-sm overflow-hidden">
+                        <div className="p-4 border-b border-slate-100">
+                            <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500">
+                                Tamil Nadu District Intelligence Map
+                            </h2>
+                        </div>
 
-                        return (
-                            <button
-                                key={district.district}
-                                onClick={() => setSelectedDistrict(district)}
-                                className="group relative flex flex-col text-left overflow-hidden rounded-xl border border-slate-200 bg-white transition-all hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-accent/50"
+                        <div className="w-full h-[600px] bg-slate-100 relative">
+                            <ComposableMap
+                                projection="geoMercator"
+                                projectionConfig={{
+                                    center: [78.6569, 11.1271], // Tamil Nadu center
+                                    scale: 4500
+                                }}
+                                style={{ width: "100%", height: "100%" }}
                             >
-                                {/* Background Intensity Indicator */}
-                                <div
-                                    className="absolute inset-0 bg-accent transition-opacity duration-500 group-hover:opacity-10"
-                                    style={{ opacity: intensity * 0.15 }}
-                                />
+                                <Geographies geography={tnGeoJsonUrl}>
+                                    {({ geographies }) =>
+                                        geographies.map((geo) => {
+                                            const districtName = geo.properties.NAME_2;
 
-                                {/* Content */}
-                                <div className="relative p-5 z-10 flex flex-col h-full bg-white/60 backdrop-blur-sm group-hover:bg-white/40 transition-colors">
-                                    <h3 className="text-lg font-bold text-slate-900 mb-1 leading-tight group-hover:text-accent transition-colors">
-                                        {district.district}
-                                    </h3>
-                                    <p className="text-xs font-mono text-slate-500 uppercase tracking-widest mb-4">
-                                        TN Region
-                                    </p>
+                                            const matchedData =
+                                                districtName &&
+                                                districtMap[districtName.trim().toLowerCase()];
 
-                                    <div className="mt-auto">
-                                        <div className="text-2xl font-black text-slate-800 tabular-nums">
-                                            {getMetricValue(district)}
-                                        </div>
-                                        <div className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                                            {getMetricLabel()}
+                                            const intensity = matchedData
+                                                ? getColorIntensity(matchedData)
+                                                : 0;
+
+                                            let fillColor = "#e2e8f0"; // default no-data gray
+
+                                            if (matchedData) {
+                                                if (intensity > 0.75) fillColor = "#075985";
+                                                else if (intensity > 0.5) fillColor = "#0284c7";
+                                                else if (intensity > 0.25) fillColor = "#38bdf8";
+                                                else fillColor = "#7dd3fc";
+                                            }
+
+                                            // Proper geographic centroid calculation
+                                            const centroid = geoCentroid(geo);
+
+                                            return (
+                                                <React.Fragment key={geo.rsmKey}>
+
+                                                    {/* District Shape */}
+                                                    <Geography
+                                                        geography={geo}
+                                                        fill={fillColor}
+                                                        stroke="#94a3b8"
+                                                        strokeWidth={0.8}
+                                                        style={{
+                                                            default: { outline: "none" },
+                                                            hover: {
+                                                                fill: "#0f172a",
+                                                                stroke: "#000",
+                                                                strokeWidth: 1.2,
+                                                                outline: "none",
+                                                                cursor: "pointer"
+                                                            },
+                                                            pressed: { outline: "none" }
+                                                        }}
+                                                        onClick={() => {
+                                                            if (matchedData) {
+                                                                setSelectedDistrict(matchedData);
+                                                            }
+                                                        }}
+                                                    />
+
+                                                    {/* District Label */}
+                                                    <Marker coordinates={centroid}>
+                                                        <text
+                                                            textAnchor="middle"
+                                                            style={{
+                                                                fontFamily: "monospace",
+                                                                fontSize: "8px",
+                                                                fill: "#1e293b",
+                                                                pointerEvents: "none"
+                                                            }}
+                                                        >
+                                                            {districtName}
+                                                        </text>
+                                                    </Marker>
+
+                                                </React.Fragment>
+                                            );
+                                        })
+                                    }
+                                </Geographies>
+                            </ComposableMap>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                        {data.map(district => {
+                            const intensity = getColorIntensity(district);
+
+                            return (
+                                <button
+                                    key={district.district}
+                                    onClick={() => setSelectedDistrict(district)}
+                                    className="group relative flex flex-col text-left overflow-hidden rounded-xl border border-slate-200 bg-white transition-all hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-accent/50"
+                                >
+                                    {/* Background Intensity Indicator */}
+                                    <div
+                                        className="absolute inset-0 bg-accent transition-opacity duration-500 group-hover:opacity-10"
+                                        style={{ opacity: intensity * 0.15 }}
+                                    />
+
+                                    {/* Content */}
+                                    <div className="relative p-5 z-10 flex flex-col h-full bg-white/60 backdrop-blur-sm group-hover:bg-white/40 transition-colors">
+                                        <h3 className="text-lg font-bold text-slate-900 mb-1 leading-tight group-hover:text-accent transition-colors">
+                                            {district.district}
+                                        </h3>
+                                        <p className="text-xs font-mono text-slate-500 uppercase tracking-widest mb-4">
+                                            TN Region
+                                        </p>
+
+                                        <div className="mt-auto">
+                                            <div className="text-2xl font-black text-slate-800 tabular-nums">
+                                                {getMetricValue(district)}
+                                            </div>
+                                            <div className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                                                {getMetricLabel()}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </button>
-                        )
-                    })}
+                                </button>
+                            )
+                        })}
+                    </div>
                 </div>
-            )}
+            )
+            }
 
             {/* RIGHT SLIDE-IN PANEL */}
             <div
@@ -253,7 +357,7 @@ export default function GeoMonitoring() {
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 }
 
