@@ -20,6 +20,7 @@ export default function Sidebar() {
         <NavItem to="/eligibility" label="Eligibility" />
         <NavItem to="/segments" label="Segments" />
         <NavItem to="/intelligence" label="Intelligence" />
+        <NavItem to="/monitoring/geographic" label="Geographic Monitoring" />
       </nav>
 
       <div className="px-6 py-4 border-t border-white/10">

@@ -10,6 +10,7 @@ import Segments from "./pages/Segments";
 import Intelligence from "./pages/Intelligence";
 import CampaignPreview from "./pages/CampaignPreview";
 import Login from "./pages/Login";
+import GeoMonitoring from "./pages/GeoMonitoring";
 
 export default function App() {
   return (
@@ -68,6 +69,14 @@ export default function App() {
         element={
           <AdminLayout>
             <Intelligence />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/monitoring/geographic"
+        element={
+          <AdminLayout>
+            <GeoMonitoring />
           </AdminLayout>
         }
       />
