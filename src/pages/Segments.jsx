@@ -54,7 +54,7 @@ export default function Segments() {
     setLoading(true);
     setError(null);
     const { data, error } = await supabase
-      .from("campaigns")
+      .from("campaign_summary_with_audit")
       .select("*")
       .order("created_at", { ascending: false });
 
@@ -214,7 +214,7 @@ export default function Segments() {
               { key: "scheme_code", label: "Scheme" },
               { key: "total_citizens", label: "Citizens" },
               { key: "total_schemes", label: "Schemes" },
-              { key: "audit_status", label: "Audit" },
+              { key: "audit_passed", label: "Audit" },
               { key: "actions", label: "Actions" },
               { key: "status", label: "Status" },
             ]}
@@ -226,10 +226,13 @@ export default function Segments() {
               scheme_code: r.scheme_code ? <span className="font-mono text-primary font-medium">{r.scheme_code}</span> : "—",
               total_citizens: <span className="font-mono">{r.total_citizens}</span>,
               total_schemes: <span className="font-mono">{r.total_schemes}</span>,
-              audit_status: (
-                <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full ${r.audit_passed ? "bg-green-100 text-status-success" : "bg-red-100 text-status-error"
-                  }`}>
-                  {r.audit_passed === true ? "PASS" : "FAIL"}
+              audit_passed: (
+                <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full ${
+                  r.audit_passed
+                    ? "bg-green-100 text-status-success"
+                    : "bg-red-100 text-status-error"
+                }`}>
+                  {r.audit_passed ? "PASS" : "FAIL"}
                 </span>
               ),
               status: <span className="font-mono text-xs text-slate-500">{r.status}</span>,
