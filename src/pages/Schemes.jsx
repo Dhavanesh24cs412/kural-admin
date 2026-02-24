@@ -241,11 +241,32 @@ export default function Schemes() {
                 label="Requires Disability"
                 value={selectedScheme.requires_disability ? "Yes" : "No"}
               />
+
+              {selectedScheme.required_documents && (
+                <div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-sans mb-2">
+                    Required Documents
+                  </div>
+                  <div className="space-y-2">
+                    {selectedScheme.required_documents.map((doc, index) => (
+                      <div
+                        key={index}
+                        className="px-3 py-2 text-xs font-medium rounded-md bg-slate-100 text-slate-700"
+                      >
+                        {doc}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <Detail
                 label="Created At"
-                value={new Date(
+                value={
                   selectedScheme.created_at
-                ).toLocaleDateString()}
+                    ? new Date(selectedScheme.created_at).toLocaleDateString()
+                    : "—"
+                }
               />
             </div>
 
