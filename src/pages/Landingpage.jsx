@@ -16,7 +16,8 @@ import {
     ServerCog,
     ChevronRight,
 } from "lucide-react";
-
+import tiruvalluvar from "../assets/tiruvalluvar.jpg";
+import governanceBg from "../assets/governance.jpg";
 // Theme Configuration
 const theme = {
     maroon: "#6A1B2D",
@@ -29,76 +30,70 @@ export default function Landingpage() {
     return (
         <div className="bg-[#F5E6C4] text-[#1E1E1E] w-full min-h-screen font-sans selection:bg-[#C79A00] selection:text-[#6A1B2D] overflow-x-hidden">
             {/* SECTION 1 - HERO */}
-            <section className="relative min-h-screen flex items-center justify-center p-8 overflow-hidden bg-gradient-to-b from-[#6A1B2D] to-[#4A101D] text-[#F5E6C4]">
-                {/* Subtle Background Outline */}
-                <div className="absolute inset-0 z-0 opacity-5 pointer-events-none flex items-end justify-center">
-                    {/* Abstract representation of temple skyline */}
-                    <svg viewBox="0 0 1440 320" className="w-full h-auto" fill="currentColor">
-                        <path d="M0,288L48,272C96,256,192,224,288,202.7C384,181,480,171,576,176C672,181,768,203,864,197.3C960,192,1056,160,1152,149.3C1248,139,1344,149,1392,154.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-                    </svg>
+            <section className="relative min-h-screen flex items-center justify-center p-8 overflow-hidden text-[#F5E6C4]">
+                {/* Hero Background Image */}
+                <div className="absolute inset-0 z-0">
+                    <img
+                        src={tiruvalluvar}
+                        alt="Tamil Nadu Temple Landscape"
+                        className="w-full h-full object-cover"
+                    />
+                    {/* Dark Overlay */}
+                    <div className="absolute inset-0 bg-[#4A101D]/70"></div>
                 </div>
-
+                {/* Subtle Background Outline */}
                 <div className="relative z-10 max-w-5xl mx-auto text-center flex flex-col items-center">
                     {/* Voice Wave Animation */}
-                    <motion.div
-                        initial="hidden"
-                        animate="visible"
-                        variants={{
-                            hidden: { opacity: 0 },
-                            visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
-                        }}
+                    <div
                         className="flex items-center justify-center gap-1 mb-6"
                     >
                         {[1, 2, 3, 2, 1].map((h, i) => (
-                            <motion.div
+                            <div
                                 key={i}
-                                variants={{
-                                    hidden: { height: 0 },
-                                    visible: { height: h * 12, transition: { repeat: Infinity, repeatType: "reverse", duration: 0.8, delay: i * 0.1 } },
-                                }}
                                 className="w-1.5 bg-[#C79A00] rounded-full"
                             />
                         ))}
-                    </motion.div>
-
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8 }}
+                    </div>
+                    {/* Voice Wave Animation */}
+                    <div className="flex items-end justify-center gap-2 mb-8 h-10">
+                        {[4, 10, 18, 28, 18, 10, 4].map((h, i) => (
+                            <motion.div
+                                key={i}
+                                className="w-1.5 bg-[#C79A00] rounded-full"
+                                animate={{ height: [h, h + 10, h] }}
+                                transition={{
+                                    duration: 1.2,
+                                    repeat: Infinity,
+                                    ease: "easeInOut",
+                                    delay: i * 0.1
+                                }}
+                                style={{ height: h }}
+                            />
+                        ))}
+                    </div>
+                    <h1
                         className="text-7xl md:text-8xl font-serif font-bold tracking-tight mb-4"
                     >
                         KURAL
-                    </motion.h1>
-                    <motion.h2
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
+                    </h1>
+                    <h2
                         className="text-2xl md:text-3xl font-light tracking-wide text-[#C79A00] mb-8 uppercase"
                     >
                         AI-Powered Public Intelligence <br className="hidden md:block" /> & Welfare Activation Engine
-                    </motion.h2>
+                    </h2>
 
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.4 }}
+                    <p
                         className="text-xl md:text-2xl mb-10 font-serif italic max-w-3xl leading-relaxed"
                     >
                         "Bridging Citizen Voices to Real-Time Governance"
-                    </motion.p>
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.5 }}
+                    </p>
+                    <p
                         className="text-lg md:text-xl font-light max-w-3xl mb-12 text-[#F5E6C4]/80 leading-relaxed"
                     >
                         KURAL is a voice-first governance intelligence platform that proactively connects with citizens, identifies eligible welfare schemes, and transforms real-time feedback into measurable administrative action.
-                    </motion.p>
+                    </p>
 
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.6 }}
+                    <div
                         className="flex flex-col items-center"
                     >
                         <Link
@@ -111,7 +106,7 @@ export default function Landingpage() {
                         <p className="mt-6 text-sm text-[#C79A00] uppercase tracking-widest font-semibold flex items-center gap-2">
                             Built for inclusive, multilingual public outreach
                         </p>
-                    </motion.div>
+                    </div>
                 </div>
             </section>
 
@@ -121,8 +116,18 @@ export default function Landingpage() {
             </div>
 
             {/* SECTION 2 - THE PROBLEM */}
-            <section className="py-24 px-8 bg-[#F5E6C4]">
-                <div className="max-w-6xl mx-auto">
+            <section className="relative py-24 px-8 text-[#1E1E1E]">
+                {/* Section Background Image */}
+                <div className="absolute inset-0 z-0">
+                    <img
+                        src={governanceBg}
+                        alt="Governance Background"
+                        className="w-full h-full object-cover"
+                    />
+                    {/* Light Sand Overlay for readability */}
+                    <div className="absolute inset-0 bg-[#F5E6C4]/80"></div>
+                </div>
+                <div className="relative z-10 max-w-6xl mx-auto">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -191,92 +196,90 @@ export default function Landingpage() {
                 </div>
             </section>
 
-            {/* SECTION 3 - THE SOLUTION */}
-            <section className="py-24 px-8 bg-white border-t border-[#1E1E1E]/5">
-                <div className="max-w-7xl mx-auto">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                        className="mb-20 text-center"
-                    >
-                        <h3 className="text-sm uppercase tracking-widest text-[#6A1B2D] font-bold mb-4">Infrastructure</h3>
-                        <h2 className="text-5xl font-serif text-[#1E1E1E] leading-tight">
-                            Voice-First Public Intelligence
-                        </h2>
-                    </motion.div>
+{/* SECTION 3 - THE SOLUTION */}
+<section className="py-32 px-6 md:px-12 bg-white border-t border-[#1E1E1E]/5">
+    <div className="max-w-5xl mx-auto">
 
-                    {/* Alternating Feature Blocks */}
-                    {[
-                        {
-                            title: "Multilingual AI Calling Engine",
-                            desc: "Outbound voice communication in native languages — no apps, no portals, no digital barriers.",
-                            icon: <Mic className="w-16 h-16 text-[#C79A00]" />,
-                        },
-                        {
-                            title: "Intelligent Scheme Matching",
-                            desc: "Automatically maps citizen demographic and economic data to eligible government schemes.",
-                            icon: <UserCheck className="w-16 h-16 text-[#C79A00]" />,
-                        },
-                        {
-                            title: "Context-Aware Issue Intelligence",
-                            desc: "Captures ward-level issues, remembers interaction history, and generates structured administrative insights.",
-                            icon: <BrainCircuit className="w-16 h-16 text-[#C79A00]" />,
-                        },
-                        {
-                            title: "Proactive Welfare Activation",
-                            desc: "Guides beneficiaries through documentation and enrollment via conversational AI.",
-                            icon: <ShieldCheck className="w-16 h-16 text-[#C79A00]" />,
-                        },
-                    ].map((feature, idx) => (
-                        <div key={idx} className={`flex flex-col md:flex-row items-center gap-12 mb-20 ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
-                            <motion.div
-                                initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.6 }}
-                                className="w-full md:w-1/2"
-                            >
-                                <div className="mb-6 flex items-center justify-center w-24 h-24 bg-[#6A1B2D] text-[#C79A00] rounded-none">
-                                    {feature.icon}
-                                </div>
-                                <h4 className="text-3xl font-serif text-[#1E1E1E] mb-4">{feature.title}</h4>
-                                <p className="text-xl font-light text-[#1E1E1E]/70">{feature.desc}</p>
-                            </motion.div>
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.6 }}
-                                className="w-full md:w-1/2 flex justify-center"
-                            >
-                                {/* Abstract Governance Illustration Placeholder */}
-                                <div className="w-full max-w-md aspect-square bg-[#F5E6C4] flex items-center justify-center relative border border-[#6A1B2D]/10 overflow-hidden group">
-                                    <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#C79A00] via-transparent to-transparent group-hover:scale-110 transition-transform duration-1000"></div>
-                                    {/* Geometric illustration */}
-                                    <div className="grid grid-cols-4 grid-rows-4 w-3/4 h-3/4 gap-2 opacity-50">
-                                        {[...Array(16)].map((_, i) => (
-                                            <div key={i} className={`bg-[#6A1B2D] ${i % 3 === 0 ? 'opacity-100' : 'opacity-20'} ${i % 5 === 0 ? 'rounded-full' : ''}`}></div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </motion.div>
-                        </div>
-                    ))}
+        {/* Section Heading */}
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-24 text-center"
+        >
+            <h3 className="text-sm uppercase tracking-widest text-[#6A1B2D] font-bold mb-4">
+                Infrastructure
+            </h3>
+            <h2 className="text-4xl md:text-5xl font-serif text-[#1E1E1E] leading-tight mb-6">
+                Voice-First Public Intelligence Engine
+            </h2>
+            <p className="text-lg md:text-xl text-[#1E1E1E]/70 font-light max-w-2xl mx-auto">
+                A structured AI system that connects citizen data, scheme eligibility,
+                and multilingual outreach into one unified governance execution layer.
+            </p>
+        </motion.div>
 
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="text-center mt-32"
-                    >
-                        <p className="text-2xl font-serif text-[#6A1B2D] max-w-3xl mx-auto italic">
-                            "KURAL transforms citizen data into measurable administrative action."
-                        </p>
-                    </motion.div>
-                </div>
-            </section>
+        {/* Stack Blocks */}
+        <div className="space-y-24">
+
+            {[
+                {
+                    title: "Multilingual AI Calling Engine",
+                    desc: "Automated outbound voice calls delivered in native languages, ensuring inclusive access across literacy and digital divides.",
+                },
+                {
+                    title: "Intelligent Scheme Matching",
+                    desc: "Deterministic eligibility evaluation using verified citizen data to identify relevant welfare schemes at scale.",
+                },
+                {
+                    title: "Context-Aware Issue Intelligence",
+                    desc: "Captures and classifies citizen responses into structured ward-level insights for measurable administrative visibility.",
+                },
+                {
+                    title: "Proactive Welfare Activation",
+                    desc: "Guides beneficiaries step-by-step on required documents and enrollment processes, increasing scheme utilization efficiency.",
+                },
+            ].map((item, idx) => (
+                <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: idx * 0.1 }}
+                    className="relative pl-10 md:pl-16 border-l-4 border-[#6A1B2D]"
+                >
+                    <span className="absolute -left-5 md:-left-7 top-0 w-10 h-10 flex items-center justify-center text-sm font-bold bg-[#6A1B2D] text-white rounded-full">
+                        {`0${idx + 1}`}
+                    </span>
+
+                    <h4 className="text-2xl md:text-3xl font-serif text-[#1E1E1E] mb-4">
+                        {item.title}
+                    </h4>
+
+                    <p className="text-lg text-[#1E1E1E]/70 font-light leading-relaxed max-w-3xl">
+                        {item.desc}
+                    </p>
+                </motion.div>
+            ))}
+
+        </div>
+
+        {/* Closing Statement */}
+        <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center mt-32"
+        >
+            <p className="text-2xl font-serif text-[#6A1B2D] italic">
+                Governance intelligence, transformed into direct citizen engagement.
+            </p>
+        </motion.div>
+
+    </div>
+</section>
 
             {/* SECTION 4 - HOW IT WORKS */}
             <section className="py-24 px-8 bg-[#1E1E1E] text-[#F5E6C4] overflow-hidden">
