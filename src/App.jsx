@@ -11,19 +11,13 @@ import Intelligence from "./pages/Intelligence";
 import CampaignPreview from "./pages/CampaignPreview";
 import Login from "./pages/Login";
 import GeoMonitoring from "./pages/GeoMonitoring";
+import Landingpage from "./pages/Landingpage";
 
 export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-      <Route
-        path="/"
-        element={
-          <AdminLayout>
-            <Navigate to="/dashboard" replace />
-          </AdminLayout>
-        }
-      />
+      <Route path="/" element={<Landingpage />} />
       <Route
         path="/dashboard"
         element={
